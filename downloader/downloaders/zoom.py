@@ -1,9 +1,5 @@
-import asyncio
-from downloader.interface import Downloader
-import yt_dlp
-from playwright.async_api import Browser, Cookie
+from playwright.async_api import Browser
 from bs4 import BeautifulSoup
-import yt_dlp
 import io
 from . import utils
 
@@ -16,6 +12,7 @@ async def zoom_download(browser: Browser, url: str) -> str | None:
 	await page.goto(url)
 	# Wait for all requests to finish
 	await page.wait_for_load_state('networkidle')
+	print("resolved")
 
 	# Get the updated page content
 	html = await page.content()
@@ -23,6 +20,8 @@ async def zoom_download(browser: Browser, url: str) -> str | None:
 
 	# Find the video element
 	video_url = soup.find("video").get("src")
+
+	print(video_url)
 
 	if video_url is None:
 		return None

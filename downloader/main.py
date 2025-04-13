@@ -21,13 +21,17 @@ def get_downloader(url: str) -> Downloader:
 	domain = str(tld.fld)
 	downloader = downloader_for_domain.get(domain)
 	if downloader is None:
+		print(f"No downloader found for {domain}")
+		print("Using generic downloader")
 		downloader = generic_download
 
 	return downloader
 
 async def download_urls(urls: list[str]) -> list[str | None | BaseException]:
 	async with async_playwright() as p:
-		browser = await p.chromium.launch(headless=False, channel="chrome")
+		# TODO: Some websites have flash players for which we need to use chroms but then it breaks "networkidle" load event
+		# browser = await p.chromium.launch(headless=False, channel="chrome")
+		browser = await p.chromium.launch(headless=False)
 
 		tasks = []
 
